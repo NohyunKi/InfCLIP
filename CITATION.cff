@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the paper below."
+title: "InfCLIP: Unified Data Valuation for CLIP Pretraining via Influence-Inspired Scoring"
+authors:
+  - family-names: Ki
+    given-names: Nohyun
+  - family-names: Chung
+    given-names: Hye Won
+preferred-citation:
+  type: conference-paper
+  title: "InfCLIP: Unified Data Valuation for CLIP Pretraining via Influence-Inspired Scoring"
+  authors:
+    - family-names: Ki
+      given-names: Nohyun
+    - family-names: Chung
+      given-names: Hye Won
+  collection-title: "Advances in Neural Information Processing Systems"
+  year: 2026

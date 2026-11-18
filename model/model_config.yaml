@@ -1,0 +1,13 @@
+# CLIP model trained from scratch in all subset-training experiments.
+# OpenAI CLIP-style modified ResNet-50 image encoder + 6-layer Transformer text encoder.
+RN50:
+  embed_dim : 512
+  image_resolution : 224
+  vision_layers : [3, 4, 6, 3]
+  vision_width : 64
+  vision_patch_size : 0 # unused for ResNet (set to None in code)
+  context_length : 77
+  vocab_size : 49408
+  transformer_width : 512
+  transformer_heads : 8
+  transformer_layers : 6 # 12 in the original CLIP

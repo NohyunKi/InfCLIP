@@ -1,0 +1,18 @@
+# Global batch size = per_gpu_train_batch_size x (number of visible GPUs).
+# The paper uses a global batch size of 1024 (e.g. 4 GPUs x 256).
+# The number of GPUs is detected automatically from CUDA_VISIBLE_DEVICES.
+per_gpu_train_batch_size : 256
+per_gpu_eval_batch_size : 256 # not used in CLIP training
+num_workers : 8
+num_train_epochs : 10 # full-data epochs (paper: 10 for CC3M, 5 for CC12M)
+
+gradient_accumulation_steps : 1
+
+logging_steps : 100
+
+optimizer:
+  params:
+    eps: 1.0e-08
+    lr: 5e-4
+    weight_decay: 0.1
+  type: AdamW

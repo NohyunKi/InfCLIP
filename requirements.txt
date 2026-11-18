@@ -1,0 +1,15 @@
+# Tested with Python 3.10. Install the PyTorch build matching your CUDA version first:
+#   https://pytorch.org/get-started/locally/
+torch>=2.0
+torchvision>=0.15
+open_clip_torch>=2.23
+datasets>=2.14
+omegaconf>=2.3
+numpy
+scipy
+scikit-learn
+pillow
+tqdm
+pyyaml
+ftfy
+regex

@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InfCLIP · NeurIPS 2026</title>
+<meta name="description" content="InfCLIP: Unified Data Valuation for CLIP Pretraining via Influence-Inspired Scoring (NeurIPS 2026).">
+<meta property="og:title" content="InfCLIP: Unified Data Valuation for CLIP Pretraining via Influence-Inspired Scoring">
+<meta property="og:description" content="An influence-inspired, retraining-free score for selecting CLIP pretraining data. NeurIPS 2026.">
+<meta property="og:image" content="static/fig1b_window.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<script>
+  window.MathJax = { tex: { inlineMath: [['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+<style>
+  :root {
+    --bg: #ffffff;
+    --surface: #f6f7f9;
+    --text: #1d2330;
+    --muted: #5b6475;
+    --line: #e3e6ec;
+    --accent: #d62828;
+    --accent-ink: #ffffff;
+    --link: #1f5fbf;
+    --max: 960px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12151b; --surface: #1b1f27; --text: #e7e9ee; --muted: #9aa3b2;
+      --line: #2a303b; --accent: #ef5b5b; --accent-ink: #12151b; --link: #7fb0ff;
+    }
+    :root:not([data-theme="light"]) figure img { background: #fff; }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 17px/1.65 "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  }
+  a { color: var(--link); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 16px; }
+  header { text-align: center; padding: 56px 0 28px; }
+  h1 { font-family: "Source Serif 4", Georgia, serif; font-weight: 600; font-size: clamp(28px, 4.6vw, 44px); line-height: 1.2; margin: 0 0 6px; }
+  h1 .name { color: var(--accent); }
+  .subtitle { font-family: "Source Serif 4", Georgia, serif; font-size: clamp(19px, 2.6vw, 26px); margin: 0 0 22px; color: var(--text); }
+  .authors { font-size: 19px; margin: 0; }
+  .authors sup { color: var(--muted); }
+  .affil { color: var(--muted); margin: 4px 0 0; }
+  .venue { display: inline-block; margin-top: 14px; padding: 3px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-weight: 600; font-size: 15px; }
+  .buttons { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 22px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; border-radius: 999px; background: var(--text); color: var(--bg); font-weight: 600; font-size: 15px; }
+  .btn:hover { text-decoration: none; opacity: .88; }
+  .btn svg { width: 17px; height: 17px; fill: currentColor; }
+  section { padding: 34px 0; border-top: 1px solid var(--line); }
+  h2 { font-family: "Source Serif 4", Georgia, serif; font-weight: 600; font-size: 28px; margin: 0 0 14px; text-align: center; }
+  h3 { font-size: 18px; margin: 26px 0 8px; }
+  p { margin: 0 0 14px; }
+  .tldr { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; padding: 16px 20px; margin: 0 auto 26px; }
+  figure { margin: 22px 0; text-align: center; }
+  figure img { max-width: 100%; height: auto; border-radius: 6px; }
+  figcaption { color: var(--muted); font-size: 15px; margin-top: 8px; text-align: left; }
+  .grid { display: grid; gap: 14px; }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g2 figure, .g3 figure { margin: 0; }
+  .row-label { text-align: left; font-weight: 600; margin: 18px 0 6px; }
+  .legend { width: 100%; max-width: 760px; height: auto; margin: 0 auto 6px; display: block; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 22px 0 6px; }
+  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; text-align: center; }
+  .stat b { display: block; font-size: 28px; color: var(--accent); line-height: 1.2; }
+  .stat span { color: var(--muted); font-size: 14px; }
+  .eq { overflow-x: auto; padding: 6px 0; }
+  ul.pillars { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 18px 0; }
+  ul.pillars li { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; font-size: 15px; }
+  ul.pillars b { display: block; font-size: 16px; margin-bottom: 4px; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; font-variant-numeric: tabular-nums; }
+  th, td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: right; }
+  th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align: left; }
+  th { color: var(--muted); font-weight: 600; }
+  td.best { font-weight: 700; color: var(--accent); }
+  .table-wrap { overflow-x: auto; }
+  pre { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; overflow-x: auto; font-size: 14px; line-height: 1.5; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  footer { color: var(--muted); font-size: 14px; padding: 30px 0 50px; border-top: 1px solid var(--line); }
+  @media (max-width: 720px) {
+    body { font-size: 16px; }
+    .g2, .g3, .stats, ul.pillars { grid-template-columns: 1fr; }
+    header { padding-top: 36px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <h1><span class="name">InfCLIP</span></h1>
+  <p class="subtitle">Unified Data Valuation for CLIP Pretraining via Influence-Inspired Scoring</p>
+  <p class="authors">Nohyun Ki &nbsp;·&nbsp; Hye Won Chung</p>
+  <p class="affil">School of Electrical Engineering, KAIST</p>
+  <span class="venue">NeurIPS 2026</span>
+  <div class="buttons">
+    <a class="btn" href="PAPER_URL"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6V2zm8 1.5V8h4.5L14 3.5zM8 12h8v1.5H8V12zm0 3h8v1.5H8V15zm0 3h5v1.5H8V18z"/></svg>Paper</a>
+    <a class="btn" href="OPENREVIEW_URL"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H7l-3 3V4zm3 4v1.5h10V8H7zm0 3v1.5h7V11H7z"/></svg>OpenReview</a>
+    <a class="btn" href="https://github.com/GITHUB_USER/InfCLIP"><svg viewBox="0 0 24 24"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>Code</a>
+    <a class="btn" href="#citation"><svg viewBox="0 0 24 24"><path d="M7 7h4v4H8.5c0 1.7.8 2.8 2.5 3.3V16c-2.9-.5-4-2.6-4-5.3V7zm7 0h4v4h-2.5c0 1.7.8 2.8 2.5 3.3V16c-2.9-.5-4-2.6-4-5.3V7z"/></svg>BibTeX</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="tldr">
+    <b>TL;DR</b> InfCLIP scores each image-text pair by how strongly it interacts with a target task, using only
+    pretrained CLIP features. One score unifies alignment, target relevance, and uniqueness, with no retraining
+    and no gradients. A compact InfCLIP-selected subset outperforms training on the full dataset.
+  </div>
+
+  <figure>
+    <img src="static/fig1a_examples.png" alt="CC3M samples sorted by CLIP score: high-score samples are trivial, middle-score samples are informative, low-score samples are noisy">
+    <figcaption><b>Alignment alone is insufficient.</b> Low-CLIP-score pairs are often noisy, but the highest-score pairs can be trivial or redundant, while mid-score pairs are often the most informative.</figcaption>
+  </figure>
+
+  <section style="border-top:0;padding-top:6px">
+    <h2>Abstract</h2>
+    <p>Effective data valuation is essential for machine learning, especially for CLIP pretraining, where models are trained on massive and inherently noisy image-text datasets. Existing CLIP data selection methods often combine heuristic signals such as alignment, target similarity, and diversity, but lack a unified principle for estimating sample contribution. This can lead to inconsistent performance across data regimes and obscures how each sample contributes to downstream performance.</p>
+    <p>In this work, we propose InfCLIP, a principled influence-inspired approach for data selection in CLIP pretraining. InfCLIP estimates the contribution of each training sample to a target task by leveraging feature representations and temperature-rescaled softmax distributions, enabling efficient computation without retraining or access to model internals. This formulation provides a unified view of alignment, informativeness, uniqueness, and target relevance within a single framework. Empirically, InfCLIP consistently outperforms existing data selection methods across a wide range of benchmarks, including zero-shot evaluation on ImageNet and distribution-shifted datasets. We also show that Self-InfCLIP enables efficient training-set analysis, including noise detection and memorization-aware data assessment, without additional retraining.</p>
+  </section>
+
+  <section>
+    <h2>Method</h2>
+    <p>We measure the influence of a training pair \(i\) on a target sample \(t\) as the inner product of the gradients of their softmax matching scores \(s_i = p_{ii} + q_{ii}\). Approximating the Jacobian interactions from a Neural Tangent Kernel perspective turns this into a closed form over features only:</p>
+    <div class="eq">
+      \[
+      I(i,t) = \tfrac{2}{\tau^2}\Big[
+        p_{ii}p_{tt}(f_i^\top f_t)(\bar g_i^\top \bar g_t)
+      + p_{ii}q_{tt}(\bar g_i^\top g_t)(f_i^\top \bar f_t)
+      + q_{ii}p_{tt}(\bar f_i^\top f_t)(g_i^\top \bar g_t)
+      + q_{ii}q_{tt}(\bar f_i^\top \bar f_t)(g_i^\top g_t)\Big]
+      \]
+    </div>
+    <p>Here \(\bar g_i = g_i - \sum_k p_{ik} g_k\) and \(\bar f_i = f_i - \sum_k q_{ki} f_k\) are centered features. The score of a sample is \(I(i,\mathcal T)=\max_{t\in\mathcal T} I(i,t)\) over 1,000 ImageNet class prototypes. Because pretrained CLIP softmaxes are nearly one-hot, we rescale the temperature only for scoring (\(\tau_{\text{score}}=0.1\)), which keeps the centered features informative without changing the teacher.</p>
+    <ul class="pillars">
+      <li><b>Alignment</b>Softmax weights \(p_{ii}, q_{ii}\) multiply every term, so mismatched pairs are suppressed.</li>
+      <li><b>Target relevance</b>Intra-modal similarities \(f_i^\top f_t\), \(g_i^\top g_t\) favor samples close to the target task.</li>
+      <li><b>Uniqueness</b>Centered features \(\bar f_i, \bar g_i\) are large for distinctive samples and small for redundant ones.</li>
+    </ul>
+    <p>A high InfCLIP score requires all three to be large at once. Scoring all of CC3M takes under a minute on a single GPU once teacher features are extracted.</p>
+  </section>
+
+  <section>
+    <h2>Results</h2>
+    <div class="stats">
+      <div class="stat"><b>30–40%</b><span>of CC3M beats full-data training</span></div>
+      <div class="stat"><b>10–20%</b><span>of CC12M beats full-data training</span></div>
+      <div class="stat"><b>5%</b><span>of DataComp-small beats full-data training</span></div>
+    </div>
+
+    <h3>Subset selection on CC3M and CC12M</h3>
+    <p>Zero-shot accuracy of CLIP (RN50) trained from scratch on selected subsets under a fixed training budget. Dashed line: full data.</p>
+    <img class="legend" src="static/fig4_legend.png" alt="Legend: InfCLIP, CLIP, SCLIP+NormSim, HYPE+NormSim, Random, CLIPCOV, Image filter, Full">
+    <p class="row-label">CC3M</p>
+    <div class="grid g3">
+      <figure><img src="static/fig4_cc3m_in1k.png" alt="CC3M ImageNet-1k accuracy vs subset ratio"></figure>
+      <figure><img src="static/fig4_cc3m_shift.png" alt="CC3M ImageNet distribution shift accuracy vs subset ratio"></figure>
+      <figure><img src="static/fig4_cc3m_all.png" alt="CC3M all-task accuracy vs subset ratio"></figure>
+    </div>
+    <p class="row-label">CC12M</p>
+    <div class="grid g3">
+      <figure><img src="static/fig4_cc12m_in1k.png" alt="CC12M ImageNet-1k accuracy vs subset ratio"></figure>
+      <figure><img src="static/fig4_cc12m_shift.png" alt="CC12M ImageNet distribution shift accuracy vs subset ratio"></figure>
+      <figure><img src="static/fig4_cc12m_all.png" alt="CC12M all-task accuracy vs subset ratio"></figure>
+    </div>
+
+    <h3>Window training: InfCLIP gives a monotonic ranking</h3>
+    <div class="grid g2" style="align-items:center">
+      <figure><img style="max-width:340px" src="static/fig1b_window.png" alt="Zero-shot accuracy of models trained on 10% windows sorted by CLIP score and by InfCLIP"></figure>
+      <p>After sorting CC3M by a score, we train on contiguous 10% windows. With CLIP score the best window is in the middle, so the highest-scoring data is not the most useful. With InfCLIP, accuracy decreases monotonically from the top window, so the ranking itself reflects data value.</p>
+    </div>
+
+    <h3>DataComp-small</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Subset</th><th>Eval</th><th>CLIP score</th><th>SCLIP+NormSim</th><th>InfCLIP</th><th>Full data</th></tr></thead>
+        <tbody>
+          <tr><td>5%</td><td>ImageNet-1K</td><td>1.54</td><td>2.97</td><td class="best">7.78</td><td>4.56</td></tr>
+          <tr><td>10%</td><td>ImageNet-1K</td><td>3.70</td><td>5.73</td><td class="best">10.82</td><td>4.56</td></tr>
+          <tr><td>20%</td><td>ImageNet-1K</td><td>7.31</td><td>8.39</td><td class="best">12.28</td><td>4.56</td></tr>
+          <tr><td>20%</td><td>All tasks</td><td>17.57</td><td>17.71</td><td class="best">21.06</td><td>14.63</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Connection to classical influence</h2>
+    <div class="grid g2" style="align-items:center">
+      <figure><img src="static/fig2a_tracin.png" alt="InfCLIP vs TracIn gradient influence, Pearson 0.717"><figcaption>vs. TracIn (Pearson 0.717)</figcaption></figure>
+      <figure><img src="static/fig2b_shapley.png" alt="InfCLIP vs group Shapley value, Pearson 0.799"><figcaption>vs. Group Shapley (Pearson 0.799)</figcaption></figure>
+    </div>
+    <p>InfCLIP correlates strongly with TracIn and Group Shapley values, especially among high-scoring samples. Removing only the top 10% of CC3M by InfCLIP drops ImageNet zero-shot accuracy from 16.37% to 9.17%, versus 14.85% for CLIP score and 15.04% for random removal.</p>
+  </section>
+
+  <section>
+    <h2>Self-InfCLIP for training-set analysis</h2>
+    <div class="grid g2">
+      <figure><img src="static/fig5a_alignment.png" alt="Alignment histograms of 1,000 samples under the full model, with the samples removed, and with their influential neighbors removed"><figcaption>Removing a sample's top-k influential neighbors hurts its alignment more than removing the sample itself.</figcaption></figure>
+      <figure><img src="static/fig5b_noise.png" alt="Fraction of shuffled noisy pairs detected vs inspected data ratio"><figcaption>Noise detection on CC3M with 10% shuffled pairs.</figcaption></figure>
+    </div>
+    <p>Using the training set itself as the target, Self-InfCLIP sums a sample's influence on its top-10 neighbors. It detects mismatched pairs better than CLIP score and the CLIPMem memorization score, and has a Spearman correlation of −0.60 with CLIPMem, all without training any extra model.</p>
+  </section>
+
+  <section>
+    <h2>Use it</h2>
+<pre><code>from calculate_score import calculate_inf_softmax_ntk
+
+scores = calculate_inf_softmax_ntk(
+    {"image_outputs": train_img, "text_outputs": train_txt},     # teacher features, (N, D)
+    {"image_outputs": target_img, "text_outputs": target_txt},   # target prototypes, (M, D)
+    batch_size=1024, logit_scale=10, device="cuda")
+subset = scores.argsort()[::-1][: int(0.3 * len(scores))]       # keep top 30%</code></pre>
+    <p>Full instructions for feature extraction, scoring, and subset training are in the <a href="https://github.com/GITHUB_USER/InfCLIP">GitHub repository</a>.</p>
+  </section>
+
+  <section id="citation">
+    <h2>Citation</h2>
+<pre><code>@inproceedings{ki2026infclip,
+  title     = {InfCLIP: Unified Data Valuation for CLIP Pretraining via Influence-Inspired Scoring},
+  author    = {Ki, Nohyun and Chung, Hye Won},
+  booktitle = {Advances in Neural Information Processing Systems},
+  year      = {2026}
+}</code></pre>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  This work was supported by the National Research Foundation of Korea (NRF) grant funded by the Korea government (MSIT) (No. RS-2024-00408003 and RS-2025-00516153) and the Institute for Information &amp; communications Technology Planning &amp; Evaluation (IITP) grant funded by the Korea government (MSIT) (No. RS-2024-00444862 and RS-2026-25522672).
+</footer>
+
+</body>
+</html>
